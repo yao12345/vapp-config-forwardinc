@@ -1,0 +1,7 @@
+echo "[*] Loading ldif file"
+
+DATAVOL=/solution/$CONFIG/../common/ldifs
+LDIFFILE=forwardinc.ldif
+
+dxloaddb -s secondary-data $DATAVOL/$LDIFFILE
+dxdisp primary-data

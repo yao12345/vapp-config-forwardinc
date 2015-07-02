@@ -1,0 +1,52 @@
+echo "[*] Running 'getIPs'"
+
+set +e
+# Poll etcd for the following 4 DSA IP addresses under dxgrid-forwardinc
+#
+# primary-router
+# primary-data
+# secondary-router
+# secondary-data
+
+ETCD_SERVICE=http://dxgrid-discovery.dir-12-0-15-ga.cluster.local:2379
+EXPECTED=4
+
+# Wait for DSAs to register their IP addresses in etcd
+while [ True ]; do
+
+#	set +e
+	DXGRID_DEMO_JSON=`/usr/bin/curl -s --retry 10 -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc | grep -Po '"value":.*?[^\\\\]"'`
+	RETVAL=$?
+#	set -e
+	if [ "$RETVAL" -ne 0 ]; then
+		echo "[*] etcd not available yet"
+		sleep 5
+		continue
+	fi
+
+	echo "[*] Curl returned:"
+	echo $DXGRID_DEMO_JSON
+
+	DSA_COUNT=`echo $DXGRID_DEMO_JSON | tr ' ' '\n' | wc -l`
+
+	echo "[*] Polling etcd. Expecting $EXPECTED. Detected $DSA_COUNT"
+
+	if [ "4" -eq "$DSA_COUNT" ]; then
+		break;
+	fi
+
+	sleep 5
+done
+
+# Get the JSON formatted data from etcd for each DSA
+PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-router`
+PRIMARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-data`
+SECONDARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-router`
+SECONDARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-data`
+
+# Obtain the IP addresses from the JSON string
+PRIMARY_ROUTER_DSA_IP=`echo $PRIMARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+SECONDARY_ROUTER_DSA_IP=`echo $SECONDARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+
