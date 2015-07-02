@@ -1,0 +1,15 @@
+echo "[*] Running 'ProcessConfig'"
+
+KNOWLEDGE_DIR=/solution/dxgrid-forwardinc/common/knowledge
+
+# Replace IP addresses
+sed -i "s/\$PRIMARY_ROUTER_DSA_IP/$PRIMARY_ROUTER_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+sed -i "s/\$PRIMARY_DATA_DSA_IP/$PRIMARY_DATA_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+
+sed -i "s/\$SECONDARY_ROUTER_DSA_IP/$SECONDARY_ROUTER_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+sed -i "s/\$SECONDARY_DATA_DSA_IP/$SECONDARY_DATA_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+
+echo "[*] Processed knowledge files:"
+cat $KNOWLEDGE_DIR/*
+
+touch /solution/.configured

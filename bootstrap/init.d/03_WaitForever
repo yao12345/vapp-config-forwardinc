@@ -1,0 +1,5 @@
+echo "[*] Finished"
+
+tail -f /dev/null
+
+echo "[*] Exiting"
