@@ -149,7 +149,7 @@
                   "env": [
                     {
                       "name": "SOURCE",
-                      "value": "https://github.com/ca-directory/vapp-config-forwardinc/archive/master.zip"
+                      "value": "https://github.com/ca-directory/vapp-config-forwardinc/archive/12.0.15.zip"
                     },
                     {
                       "name": "DESTINATION",
@@ -258,7 +258,7 @@
                   "env": [
                     {
                       "name": "SOURCE",
-                      "value": "https://github.com/ca-directory/vapp-config-forwardinc/archive/master.zip"
+                      "value": "https://github.com/ca-directory/vapp-config-forwardinc/archive/12.0.15.zip"
                     },
                     {
                       "name": "DESTINATION",
