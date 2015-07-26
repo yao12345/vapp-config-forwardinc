@@ -212,7 +212,7 @@
               "containers": [
                 {
                   "name": "dxgrid-router",
-                  "image": "store.vapp-security.solutions/directory/dxgrid",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:latest",
                   "env": [
                     {
                       "name": "CONFIG",
@@ -233,7 +233,7 @@
                 },
                 {
                   "name": "dxgrid-data",
-                  "image": "store.vapp-security.solutions/directory/dxgrid",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:latest",
                   "env": [
                     {
                       "name": "CONFIG",
