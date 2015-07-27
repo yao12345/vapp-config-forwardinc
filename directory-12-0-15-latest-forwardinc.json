@@ -103,7 +103,7 @@
               "containers": [
                 {
                   "name": "dxgrid-router",
-                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15.latest",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15",
                   "env": [
                     {
                       "name": "CONFIG",
@@ -124,7 +124,7 @@
                 },
                 {
                   "name": "dxgrid-data",
-                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15.latest",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15",
                   "env": [
                     {
                       "name": "CONFIG",
@@ -212,7 +212,7 @@
               "containers": [
                 {
                   "name": "dxgrid-router",
-                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15.latest",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15",
                   "env": [
                     {
                       "name": "CONFIG",
@@ -233,7 +233,7 @@
                 },
                 {
                   "name": "dxgrid-data",
-                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15.latest",
+                  "image": "store.vapp-security.solutions/directory/dxgrid:12.0.15",
                   "env": [
                     {
                       "name": "CONFIG",
