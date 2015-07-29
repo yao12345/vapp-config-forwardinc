@@ -34,7 +34,7 @@
             "spec": {
               "containers": [
                 {
-                  "image": "dev-store.vapp-security.solutions/directory/jxweb:12.0.15.ga",
+                  "image": "store.vapp-security.solutions/directory/jxweb:12.0.15.ga",
                   "livenessProbe": {
                     "httpGet": {
                       "path": "/",
