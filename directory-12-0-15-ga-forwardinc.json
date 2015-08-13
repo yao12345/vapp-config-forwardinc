@@ -10,7 +10,8 @@
           "namespace": "dir-12-0-15-ga",
           "annotations": {
             "description": "Public service to CA Directory",
-            "ca.com/cluster-public-url": "/jxweb/ConnectPageServlet?host=ldap.dir-12-0-15-ga.cluster.local&port=389&baseDN=dc=forwardinc,dc=ca"
+            "ca.com/cluster-public-url": "/jxweb/ConnectPageServlet?host=ldap.dir-12-0-15-ga.cluster.local&port=389&baseDN=dc=forwardinc,dc=ca",
+            "ca.com/cluster-public-urltext": "Browse"            
           },
           "labels": {
             "ca.com/cluster-public-service": "tcp",
