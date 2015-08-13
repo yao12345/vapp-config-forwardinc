@@ -65,6 +65,7 @@
         "metadata": {
           "annotations": {
             "ca.com/cluster-public-urlpath": "/jxweb",
+            "ca.com/cluster-public-urltext": "UI",
             "ca.com/cluster-public-urlpath-backend": "/jxweb",
             "description": "Public service to expose JXWeb UI"
           },
