@@ -1,93 +1,90 @@
 {
-  "id": "jxweb-12-0-15-ga",
-  "name": "CA Directory 12.0.15.ga LDAP Browser",
-  "replicationControllerList": {
-    "apiVersion": "v1beta3",
-    "items": [
+   "apiVersion":"v1",
+   "kind":"Template",
+   "metadata":{
+      "annotations":{
+         "description":"CA Directory 12.0.15.ga LDAP Browser"
+      },
+      "creationTimestamp":null,
+      "name":"jxweb-12-0-15-ga",
+      "namespace":"utility"
+   },
+   "objects":[
       {
-        "metadata": {
-          "annotations": {
-            "description": "JXWeb Replication Controller"
-          },
-          "labels": {
-            "ca.com/jxweb-12-0-15-ga": "web"
-          },
-          "name": "jxweb-rc",
-          "namespace": "utility"
-        },
-        "spec": {
-          "replicas": 1,
-          "selector": {
-            "ca.com/jxweb-12-0-15-ga": "web"
-          },
-          "template": {
-            "metadata": {
-              "annotations": {
-                "description": "JXWeb Pod"
-              },
-              "labels": {
-                "ca.com/jxweb-12-0-15-ga": "web"
-              },
-              "name": "web",
-              "namespace": "utility"
+         "apiVersion":"v1",
+         "kind":"ReplicationController",
+         "metadata":{
+            "annotations":{
+               "description":"JXWeb Replication Controller"
             },
-            "spec": {
-              "containers": [
-                {
-                  "image": "store.vapp-security.solutions/directory/jxweb:12.0.15.ga",
-                  "livenessProbe": {
-                    "httpGet": {
-                      "path": "/",
-                      "port": "9090"
-                    },
-                    "initialDelaySeconds": 30
+            "labels":{
+               "ca.com/jxweb-12-0-15-ga":"web"
+            },
+            "name":"jxweb-rc",
+            "namespace":"utility"
+         },
+         "spec":{
+            "replicas":1,
+            "selector":{
+               "ca.com/jxweb-12-0-15-ga":"web"
+            },
+            "template":{
+               "metadata":{
+                  "annotations":{
+                     "description":"JXWeb Pod"
                   },
-                  "name": "web",
-                  "ports": [
-                    {
-                      "containerPort": 9090
-                    }
-                  ]
-                }
-              ],
-              "dnsPolicy": "ClusterFirst",
-              "restartPolicy": "Always"
+                  "labels":{
+                     "ca.com/jxweb-12-0-15-ga":"web"
+                  },
+                  "name":"web",
+                  "namespace":"utility"
+               },
+               "spec":{
+                  "containers":[
+                     {
+                        "image":"store.vapp-security.solutions/directory/jxweb:12.0.15.ga",
+                        "name":"web",
+                        "ports":[
+                           {
+                              "containerPort":9090
+                           }
+                        ]
+                     }
+                  ],
+                  "dnsPolicy":"ClusterFirst",
+                  "restartPolicy":"Always"
+               }
             }
-          }
-        }
-      }
-    ]
-  },
-  "serviceList": {
-    "items": [
+         }
+      },
       {
-        "apiVersion": "v1beta3",
-        "metadata": {
-          "annotations": {
-            "ca.com/cluster-public-url": "/jxweb",
-            "ca.com/cluster-public-urltext": "UI",
-            "ca.com/cluster-public-urlpath": "/jxweb",
-            "ca.com/cluster-public-urlpath-backend": "/jxweb",
-            "description": "Public service to expose JXWeb UI"
-          },
-          "labels": {
-            "ca.com/cluster-public-service": "true"
-          },
-          "name": "jxweb",
-          "namespace": "utility"
-        },
-        "spec": {
-          "ports": [
-            {
-              "port": 80,
-              "targetPort": 9090
+         "apiVersion":"v1",
+         "kind":"Service",
+         "metadata":{
+            "annotations":{
+               "ca.com/cluster-public-url":"/jxweb",
+               "ca.com/cluster-public-urltext":"UI",
+               "ca.com/cluster-public-urlpath":"/jxweb",
+               "ca.com/cluster-public-urlpath-backend":"/jxweb",
+               "description":"Public service to expose JXWeb UI"
+            },
+            "labels":{
+               "ca.com/cluster-public-service":"true"
+            },
+            "name":"jxweb",
+            "namespace":"utility"
+         },
+         "spec":{
+            "ports":[
+               {
+                  "port":80,
+                  "targetPort":9090
+               }
+            ],
+            "selector":{
+               "ca.com/jxweb-12-0-15-ga":"web"
             }
-          ],
-          "selector": {
-            "ca.com/jxweb-12-0-15-ga": "web"
-          }
-        }
+         }
       }
-    ]
-  }
+   ]
 }
