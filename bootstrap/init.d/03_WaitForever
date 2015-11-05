@@ -1,14 +1,11 @@
-echo "[*] Finished and detecting any new changes..."
+echo "[*] Detecting any new changes..."
 
 ETCD_SERVICE=http://dxgrid-discovery:2379
 
 while [ True ]; do
-echo "now is...."
-date
 echo "Waiting for new changes from the ETCD service..."
 /usr/bin/curl "$ETCD_SERVICE/v2/keys/dxgrid-forwardinc?wait=true&recursive=true"
 echo "Detected new changes from the ETCD service, updating the config files..."
-echo "===================================================="
 
 # Get the JSON formatted data from etcd for each DSA
 PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-router`
@@ -22,9 +19,7 @@ PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | 
 SECONDARY_ROUTER_DSA_IP=`echo $SECONDARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
 SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
 
-#source ./02_ProcessConfig
-
-KNOWLEDGE_ORG_DIR=/solution/dxgrid-forwardinc/common/knowledge_org
+KNOWLEDGE_ORG_DIR=/solution/dxgrid-forwardinc/common/knowledge_template
 KNOWLEDGE_DIR=/solution/dxgrid-forwardinc/common/knowledge
 
 # Overwrite the common knowleged folder
@@ -41,11 +36,9 @@ sed -i "s/\$SECONDARY_DATA_DSA_IP/$SECONDARY_DATA_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
 echo "[*] Updated knowledge files:"
 cat $KNOWLEDGE_DIR/*
 
-
 touch /solution/.configured
 
 done
 
-#tail -f /dev/null
 
 echo "[*] Exiting"
