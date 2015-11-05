@@ -6,7 +6,7 @@ while [ True ]; do
 echo "now is...."
 date
 echo "Waiting for new changes from the ETCD service..."
-/usr/bin/curl '$ETCD_SERVICE/v2/keys/dxgrid-forwardinc?wait=true&recursive=true'
+/usr/bin/curl $ETCD_SERVICE/v2/keys/dxgrid-forwardinc?wait=true&recursive=true
 echo "Detected new changes from the ETCD service, updating the config files..."
 echo "===================================================="
 
