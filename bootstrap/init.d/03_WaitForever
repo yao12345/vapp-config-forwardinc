@@ -1,4 +1,4 @@
-echo "[*] Finished"
+echo "[*] Finished and looping"
 
 tail -f /dev/null
 
