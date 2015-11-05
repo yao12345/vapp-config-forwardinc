@@ -2,22 +2,47 @@ echo "[*] Detecting any new changes..."
 
 ETCD_SERVICE=http://dxgrid-discovery:2379
 
+# Get IP addr
+HOSTNAME=`hostname`
+ADDRESS=`grep $HOSTNAME /etc/hosts | awk '{print $1}' | uniq`
+
+echo "[*] Using $ADDRESS for IP address"
+
+# Push IP to etcd
+while [ True ]; do
+
+	set +e
+	OUTPUT=`/usr/bin/curl -s --retry 10 -L $ETCD_SERVICE/v2/keys/$CONFIG -XPUT -d value="$ADDRESS"`
+	RETVAL=$?
+	set -e
+
+	if [ "$RETVAL" -eq 0 ]; then
+		echo "[*] etcd update complete"
+		break
+	else
+		echo "[*] etcd not available yet"
+		sleep 5
+	fi
+done
+
 while [ True ]; do
 echo "Waiting for new changes from the ETCD service..."
 /usr/bin/curl "$ETCD_SERVICE/v2/keys/dxgrid-forwardinc?wait=true&recursive=true"
 echo "Detected new changes from the ETCD service, updating the config files..."
 
 # Get the JSON formatted data from etcd for each DSA
-PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-router`
-PRIMARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-data`
-SECONDARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-router`
-SECONDARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-data`
+PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-ip`
+#PRIMARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-data`
+SECONDARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-ip`
+#SECONDARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-data`
 
 # Obtain the IP addresses from the JSON string
 PRIMARY_ROUTER_DSA_IP=`echo $PRIMARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
-PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+#PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+PRIMARY_DATA_DSA_IP=$PRIMARY_ROUTER_DSA_IP
 SECONDARY_ROUTER_DSA_IP=`echo $SECONDARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
-SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+#SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+SECONDARY_DATA_DSA_IP=$SECONDARY_ROUTER_DSA_IP
 
 KNOWLEDGE_ORG_DIR=/solution/dxgrid-forwardinc/common/knowledge_template
 KNOWLEDGE_DIR=/solution/dxgrid-forwardinc/common/knowledge
