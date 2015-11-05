@@ -31,7 +31,7 @@ while [ True ]; do
 
 	echo "[*] Polling etcd. Expecting $EXPECTED. Detected $DSA_COUNT"
 
-	if [ "4" -eq "$DSA_COUNT" ]; then
+	if [ "2" -eq "$DSA_COUNT" ]; then
 		break;
 	fi
 
@@ -39,14 +39,16 @@ while [ True ]; do
 done
 
 # Get the JSON formatted data from etcd for each DSA
-PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-router`
-PRIMARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-data`
-SECONDARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-router`
-SECONDARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-data`
+PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-ip`
+#PRIMARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-data`
+SECONDARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-ip`
+#SECONDARY_DATA_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/secondary-data`
 
 # Obtain the IP addresses from the JSON string
 PRIMARY_ROUTER_DSA_IP=`echo $PRIMARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
-PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+#PRIMARY_DATA_DSA_IP=`echo $PRIMARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+PRIMARY_DATA_DSA_IP=$PRIMARY_ROUTER_DSA_IP
 SECONDARY_ROUTER_DSA_IP=`echo $SECONDARY_ROUTER_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
-SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+#SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"' | awk -F '"' '{ print $4 }'`
+SECONDARY_DATA_DSA_IP=$SECONDARY_ROUTER_DSA_IP
 
