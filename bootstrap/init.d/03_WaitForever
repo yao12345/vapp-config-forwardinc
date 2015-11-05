@@ -7,6 +7,7 @@ while [ True ]; do
 echo "Waiting for new changes from the ETCD service..."
 /usr/bin/curl -s --retry 10 -L '$ETCD_SERVICE/v2/keys/dxgrid-forwardinc?wait=true&recursive=true'
 echo "Detected new changes from the ETCD service, updating the config files..."
+echo "===================================================="
 
 # Get the JSON formatted data from etcd for each DSA
 PRIMARY_ROUTER_JSON=`/usr/bin/curl -s -L $ETCD_SERVICE/v2/keys/dxgrid-forwardinc/primary-router`
@@ -22,17 +23,22 @@ SECONDARY_DATA_DSA_IP=`echo $SECONDARY_DATA_JSON | grep -Po '"value":.*?[^\\\\]"
 
 #source ./02_ProcessConfig
 
+KNOWLEDGE_ORG_DIR=/solution/dxgrid-forwardinc/common/knowledge_org
 KNOWLEDGE_DIR=/solution/dxgrid-forwardinc/common/knowledge
 
 # Replace IP addresses
-sed -i "s/\$PRIMARY_ROUTER_DSA_IP/$PRIMARY_ROUTER_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
-sed -i "s/\$PRIMARY_DATA_DSA_IP/$PRIMARY_DATA_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+sed -i "s/\$PRIMARY_ROUTER_DSA_IP/$PRIMARY_ROUTER_DSA_IP/g" $KNOWLEDGE_ORG_DIR/*.dxc
+sed -i "s/\$PRIMARY_DATA_DSA_IP/$PRIMARY_DATA_DSA_IP/g" $KNOWLEDGE_ORG_DIR/*.dxc
 
-sed -i "s/\$SECONDARY_ROUTER_DSA_IP/$SECONDARY_ROUTER_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
-sed -i "s/\$SECONDARY_DATA_DSA_IP/$SECONDARY_DATA_DSA_IP/g" $KNOWLEDGE_DIR/*.dxc
+sed -i "s/\$SECONDARY_ROUTER_DSA_IP/$SECONDARY_ROUTER_DSA_IP/g" $KNOWLEDGE_ORG_DIR/*.dxc
+sed -i "s/\$SECONDARY_DATA_DSA_IP/$SECONDARY_DATA_DSA_IP/g" $KNOWLEDGE_ORG_DIR/*.dxc
 
 echo "[*] Updated knowledge files:"
-cat $KNOWLEDGE_DIR/*
+cat $KNOWLEDGE_ORG_DIR/*
+
+# Overwrite the common knowleged folder
+echo "Overwritting the common knowleged folder..."
+cp -r $KNOWLEDGE_ORG_DIR/* $KNOWLEDGE_DIR 
 
 touch /solution/.configured
 
